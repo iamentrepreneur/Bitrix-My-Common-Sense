@@ -1,5 +1,5 @@
 <?
-//AddEventHandler("main", "OnBeforeProlog", "MyOnBeforePrologHandler", 50);
+AddEventHandler("main", "OnBeforeProlog", "MyOnBeforePrologHandler", 50);
 function MyOnBeforePrologHandler(){
    global $USER;
    if(!is_object($USER)){
