@@ -1,0 +1,447 @@
+/* ================================
+   My Insights — Clean UI (v2)
+   - CSS Variables
+   - Consistent controls (42px)
+   - Accessible focus states
+   - Adaptive layout
+   - Light/Dark scheme
+   ================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+    --bg: #f7f7f9;
+    --panel: #ffffff;
+    --text: #161616;
+    --text-muted: #6b7280;
+    --border: #e6e7eb;
+    --border-strong: #d3d5db;
+    --shadow: 0 6px 22px rgba(0, 0, 0, .06);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, .06);
+    --primary: #111111;
+    --primary-900: #000000;
+    --accent: #2563eb;
+    --success: #10b981;
+    --danger: #e11d48;
+    --badge: #f3f4f6;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 14px;
+
+    --gap-1: 6px;
+    --gap-2: 10px;
+    --gap-3: 14px;
+    --gap-4: 18px;
+    --gap-5: 24px;
+
+    --control-h: 42px;
+    --pad-x: 16px;
+    --pad-y: 12px;
+
+    --font: 15px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Dark scheme (auto) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f1115;
+        --panel: #161922;
+        --text: #e6e7ea;
+        --text-muted: #9aa0ae;
+        --border: #232633;
+        --border-strong: #2b2f3d;
+        --shadow: 0 8px 26px rgba(0, 0, 0, .45);
+        --shadow-sm: 0 6px 16px rgba(0, 0, 0, .4);
+        --primary: #e6e7ea;
+        --primary-900: #ffffff;
+        --badge: #1d2130;
+    }
+}
+
+/* Manual dark theme switch: .theme-dark .wrap { ... } */
+.theme-dark :root {
+    color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+* {
+    box-sizing: border-box
+}
+
+html, body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: var(--font);
+    -webkit-font-smoothing: antialiased
+}
+
+img {
+    max-width: 100%;
+    display: block
+}
+
+a {
+    color: inherit
+}
+
+/* ---------- Layout ---------- */
+.wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: var(--gap-5);
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-4);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--gap-4);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.panel:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Headings / meta ---------- */
+.head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--gap-2);
+    margin-bottom: var(--gap-3);
+    flex-wrap: wrap;
+}
+
+.title {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.25;
+    font-size: clamp(18px, 2vw, 22px);
+    letter-spacing: .2px;
+}
+
+.muted {
+    color: var(--text-muted);
+    font-size: 13px
+}
+
+/* ---------- Form grid ---------- */
+.row {
+    display: grid;
+    gap: var(--gap-2);
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+/* ---------- Controls (unified) ---------- */
+.input, .textarea, select, .btn {
+    font: inherit;
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: #fff0; /* transparent (panel shows under); */
+    border-radius: var(--radius-md);
+    height: var(--control-h);
+    padding: 0 var(--pad-x);
+    transition: border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.input, select {
+    background: var(--panel);
+}
+
+.input:focus, .textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Textarea specifics */
+.textarea {
+    min-height: 96px;
+    height: auto;
+    padding: var(--pad-y) var(--pad-x);
+    resize: vertical;
+    line-height: 1.55;
+    background: var(--panel);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #f5f6f8;
+    color: var(--text);
+    border-color: var(--border-strong);
+    padding: 0 16px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #eceef2;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed
+}
+
+.btn--p {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.btn--p:hover {
+    background: var(--primary-900);
+    border-color: var(--primary-900);
+}
+
+/* ---------- List of groups ---------- */
+.list {
+    display: grid;
+    gap: var(--gap-2);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--pad-y) var(--pad-x);
+    background: var(--panel);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.item:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.item strong {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: .15px;
+    max-width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Actions line: single row, no wrap */
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--gap-2);
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+/* ---------- Color & counters ---------- */
+.group-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.color-head {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.count-badge, .badge {
+    display: inline-block;
+    padding: 6px 10px;
+    line-height: 1;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--badge);
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.badge { /* reuse */
+}
+
+/* ---------- Error state ---------- */
+.err {
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+    color: color-mix(in srgb, var(--danger) 80%, #fff);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    margin-bottom: var(--gap-2);
+}
+
+/* ---------- Cards (inside group) ---------- */
+.card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.card__in {
+    padding: var(--pad-y) var(--pad-x);
+    display: grid;
+    gap: var(--gap-2)
+}
+
+.card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-2)
+}
+
+.card input[type="text"], .card textarea {
+    border: none;
+    background: transparent;
+    font: inherit;
+    color: var(--text);
+    width: 100%;
+}
+
+.card input[type="text"] {
+    font-weight: 600;
+    font-size: 15px
+}
+
+.card textarea {
+    min-height: 96px;
+    resize: vertical;
+    line-height: 1.55
+}
+
+/* Row inside card with 3 columns (field + 2 buttons) on wide screens */
+.card .row {
+    grid-template-columns: 1fr auto auto;
+}
+
+/* ---------- Pagination ---------- */
+.pager {
+    margin-top: var(--gap-3);
+    display: flex;
+    gap: var(--gap-1);
+    flex-wrap: wrap;
+}
+
+.pager a, .pager span {
+    display: inline-block;
+    padding: 8px 12px;
+    min-width: 34px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #f3f4f6;
+    color: var(--text);
+    text-decoration: none;
+    transition: background .2s, border-color .2s, color .2s;
+}
+
+.pager a:hover {
+    background: #e9ebf0;
+}
+
+.pager span {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff
+}
+
+/* ---------- Color input polish ---------- */
+input[type="color"] {
+    overflow: hidden;
+    appearance: none;
+    padding: 0;
+    /*border-radius: var(--radius-sm);*/
+    width: 42px;
+    height: var(--control-h);
+    border: 1px solid var(--border-strong);
+    background: var(--panel);
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 6px;
+    border-radius: var(--radius-sm)
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border-radius: calc(var(--radius-sm) - 2px);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 840px) {
+    .wrap {
+        padding: 18px
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+        gap: var(--gap-1);
+    }
+
+    .item {
+        align-items: flex-start
+    }
+
+    .item strong {
+        max-width: 100%
+    }
+
+    .card .row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    :root {
+        --control-h: 40px;
+    }
+
+    .panel {
+        padding: var(--gap-3)
+    }
+
+    .title {
+        font-size: 18px
+    }
+}
+
+/* ---------- Motion respect ---------- */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important
+    }
+}
