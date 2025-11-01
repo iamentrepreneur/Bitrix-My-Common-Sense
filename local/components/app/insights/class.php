@@ -1,14 +1,20 @@
 <?php
+
 namespace Local\Components\App\Insights;
 
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Context;
+use Bitrix\Main\LoaderException;
+use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\PageNavigation;
 use CBitrixComponent;
 use CComponentEngine;
-use Local\Insights\Repository; // твой репозиторий (items + groups)
+use Local\Insights\Repository;
+
+// твой репозиторий (items + groups)
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
@@ -22,6 +28,9 @@ class Component extends CBitrixComponent
         return parent::onPrepareComponentParams($params);
     }
 
+    /**
+     * @throws SystemException
+     */
     protected function checkAuth(): void
     {
         global $USER;
@@ -31,10 +40,20 @@ class Component extends CBitrixComponent
         $this->userId = (int)$USER->GetID();
     }
 
+    protected function ensureAuth(): bool
+    {
+        $current = CurrentUser::get();
+        if ($current && $current->getId() > 0) {
+            $this->userId = (int)$current->getId();
+            return true;
+        }
+        return false;
+    }
+
     protected function resolveRoute(): array
     {
         $defaultUrlTemplates = [
-            'list'  => '',
+            'list' => '',
             'group' => 'group/#GROUP_ID#/',
         ];
         $componentVariables = ['GROUP_ID'];
@@ -60,13 +79,30 @@ class Component extends CBitrixComponent
         return [$componentPage, $arUrlTemplates, $arVariables];
     }
 
+    /**
+     * @throws ObjectPropertyException
+     * @throws ArgumentException
+     * @throws LoaderException
+     * @throws SystemException
+     */
     protected function handlePost(string $page, ?int $groupId): void
     {
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        $request = Context::getCurrent()->getRequest();
+        if (!$request->isPost() || !$request->getPost('INS_ACT')) return;
+
+        if (!$this->ensureAuth()) {
+            return;
+        }
+
+        if (!check_bitrix_sessid()) {
+            throw new SystemException('Bad sessid');
+        }
+
+        $request = Context::getCurrent()->getRequest();
         if (!$request->isPost() || !$request->getPost('INS_ACT')) return;
 
         if (!check_bitrix_sessid()) {
-            throw new \Bitrix\Main\SystemException('Bad sessid');
+            throw new SystemException('Bad sessid');
         }
 
         $act = (string)$request->getPost('INS_ACT');
@@ -74,19 +110,19 @@ class Component extends CBitrixComponent
         // ——— СТРАНИЦА СПИСКОВ ———
         if ($page === 'list') {
             if ($act === 'GROUP_CREATE') {
-                $name  = trim((string)$request->getPost('name'));
+                $name = trim((string)$request->getPost('name'));
                 $color = self::sanitizeHexColor((string)$request->getPost('color')) ?? '#cccccc';
-                if ($name === '') throw new \Bitrix\Main\SystemException('Название обязательно');
+                if ($name === '') throw new SystemException('Название обязательно');
                 \Local\Insights\Repository::groupCreate($this->userId, $name, $color, 500);
             } elseif ($act === 'GROUP_RENAME') {
-                $gid  = (int)$request->getPost('id');
+                $gid = (int)$request->getPost('id');
                 $name = trim((string)$request->getPost('name'));
                 \Local\Insights\Repository::groupUpdateOwned($gid, $this->userId, ['UF_NAME' => $name]);
             } elseif ($act === 'GROUP_DELETE') {
                 $gid = (int)$request->getPost('id');
                 \Local\Insights\Repository::groupDeleteOwned($gid, $this->userId, true);
             } elseif ($act === 'GROUP_SET_COLOR') {
-                $gid   = (int)$request->getPost('id');
+                $gid = (int)$request->getPost('id');
                 $color = self::sanitizeHexColor((string)$request->getPost('color')) ?? '#cccccc';
                 \Local\Insights\Repository::groupUpdateOwned($gid, $this->userId, ['UF_COLOR' => $color]);
             }
@@ -97,16 +133,16 @@ class Component extends CBitrixComponent
         if ($page === 'group' && $groupId) {
             if ($act === 'ITEM_CREATE') {
                 $title = trim((string)$request->getPost('title'));
-                $text  = trim((string)$request->getPost('text'));
-                $tags  = trim((string)$request->getPost('tags'));
-                if ($text === '') throw new \Bitrix\Main\SystemException('Текст обязателен');
+                $text = trim((string)$request->getPost('text'));
+                $tags = trim((string)$request->getPost('tags'));
+                if ($text === '') throw new SystemException('Текст обязателен');
                 \Local\Insights\Repository::create($this->userId, $text, $title, $tags, $groupId);
             } elseif ($act === 'ITEM_UPDATE') {
                 $id = (int)$request->getPost('id');
                 $fields = [
                     'UF_TITLE' => (string)$request->getPost('title'),
-                    'UF_TEXT'  => (string)$request->getPost('text'),
-                    'UF_TAGS'  => (string)$request->getPost('tags'),
+                    'UF_TEXT' => (string)$request->getPost('text'),
+                    'UF_TAGS' => (string)$request->getPost('tags'),
                 ];
                 \Local\Insights\Repository::updateOwned($id, $this->userId, $fields);
             } elseif ($act === 'ITEM_DELETE') {
@@ -116,7 +152,7 @@ class Component extends CBitrixComponent
                 $id = (int)$request->getPost('id');
                 \Local\Insights\Repository::togglePinOwned($id, $this->userId);
             } elseif ($act === 'GROUP_SET_COLOR') {
-                $gid   = (int)$request->getPost('id');
+                $gid = (int)$request->getPost('id');
                 $color = self::sanitizeHexColor((string)$request->getPost('color')) ?? '#cccccc';
                 \Local\Insights\Repository::groupUpdateOwned($gid, $this->userId, ['UF_COLOR' => $color]);
             }
@@ -128,12 +164,30 @@ class Component extends CBitrixComponent
     protected function makeGroupUrl(int $groupId): string
     {
         $tpl = $this->arParams['SEF_URL_TEMPLATES']['group'] ?? 'group/#GROUP_ID#/';
-        return rtrim($this->arParams['SEF_FOLDER'], '/').'/'.str_replace('#GROUP_ID#', $groupId, $tpl);
+        return rtrim($this->arParams['SEF_FOLDER'], '/') . '/' . str_replace('#GROUP_ID#', $groupId, $tpl);
     }
 
-    public function executeComponent()
+    /**
+     * @throws SystemException|LoaderException
+     */
+    public function executeComponent(): void
     {
-        $this->checkAuth();
+        // 💡 Мягкая проверка авторизации
+        if (!$this->ensureAuth()) {
+            // Передаём данные в подшаблон "auth"
+            $this->arResult = [
+                'PAGE' => 'auth',
+                'MESSAGE' => 'Требуется авторизация',
+                'SEF_FOLDER' => $this->arParams['SEF_FOLDER'],
+                'ERROR' => null,
+            ];
+
+            // Рендерим подшаблон и выходим
+            $this->includeComponentTemplate('auth');
+            return;
+        }
+
+        // Ниже — ваш текущий код
         [$page, $urlTemplates, $vars] = $this->resolveRoute();
         $groupId = isset($vars['GROUP_ID']) ? (int)$vars['GROUP_ID'] : null;
 
@@ -153,13 +207,14 @@ class Component extends CBitrixComponent
                 if (!$groupId) throw new SystemException('Группа не указана');
                 $this->arResult['GROUP_ID'] = $groupId;
                 $this->arResult['GROUP'] = $this->findGroup($groupId);
-                // пагинация
+
                 $request = Context::getCurrent()->getRequest();
                 $pageNum = max(1, (int)$request->get('page'));
                 $pageSize = 20;
                 $q = trim((string)$request->get('q'));
 
                 $items = Repository::listByOwner($this->userId, $pageNum, $pageSize, $q, $groupId);
+
                 $nav = new PageNavigation('ins_nav');
                 $nav->setRecordCount($items['total']);
                 $nav->setCurrentPage($pageNum);
@@ -168,8 +223,8 @@ class Component extends CBitrixComponent
 
                 $this->arResult['ITEMS'] = $items['items'];
                 $this->arResult['TOTAL'] = $items['total'];
-                $this->arResult['NAV']   = $nav;
-                $this->arResult['Q']     = $q;
+                $this->arResult['NAV'] = $nav;
+                $this->arResult['Q'] = $q;
             }
         } catch (\Throwable $e) {
             $this->arResult['ERROR'] = $e->getMessage();
@@ -178,6 +233,12 @@ class Component extends CBitrixComponent
         $this->includeComponentTemplate();
     }
 
+    /**
+     * @throws LoaderException
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
     protected function findGroup(int $groupId): ?array
     {
         // быстрый поиск в списке владельца
@@ -194,7 +255,7 @@ class Component extends CBitrixComponent
         // допустим только #RGB/#RRGGBB
         if (preg_match('/^#([0-9a-fA-F]{3}){1,2}$/', $raw)) {
             // нормализуем в верхний регистр
-            return '#'.strtoupper(ltrim($raw, '#'));
+            return '#' . strtoupper(ltrim($raw, '#'));
         }
         return null;
     }

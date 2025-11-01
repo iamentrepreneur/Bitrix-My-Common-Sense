@@ -1,99 +1,5 @@
-/* ================================
-   My Insights — Clean UI (v2)
-   - CSS Variables
-   - Consistent controls (42px)
-   - Accessible focus states
-   - Adaptive layout
-   - Light/Dark scheme
-   ================================= */
-
-/* ---------- Design tokens ---------- */
-:root {
-    --bg: #f7f7f9;
-    --panel: #ffffff;
-    --text: #161616;
-    --text-muted: #6b7280;
-    --border: #e6e7eb;
-    --border-strong: #d3d5db;
-    --shadow: 0 6px 22px rgba(0, 0, 0, .06);
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, .06);
-    --primary: #111111;
-    --primary-900: #000000;
-    --accent: #2563eb;
-    --success: #10b981;
-    --danger: #e11d48;
-    --badge: #f3f4f6;
-
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 14px;
-
-    --gap-1: 6px;
-    --gap-2: 10px;
-    --gap-3: 14px;
-    --gap-4: 18px;
-    --gap-5: 24px;
-
-    --control-h: 42px;
-    --pad-x: 16px;
-    --pad-y: 12px;
-
-    --font: 15px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
-
-/* Dark scheme (auto) */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #0f1115;
-        --panel: #161922;
-        --text: #e6e7ea;
-        --text-muted: #9aa0ae;
-        --border: #232633;
-        --border-strong: #2b2f3d;
-        --shadow: 0 8px 26px rgba(0, 0, 0, .45);
-        --shadow-sm: 0 6px 16px rgba(0, 0, 0, .4);
-        --primary: #e6e7ea;
-        --primary-900: #ffffff;
-        --badge: #1d2130;
-    }
-}
-
-/* Manual dark theme switch: .theme-dark .wrap { ... } */
-.theme-dark :root {
-    color-scheme: dark;
-}
-
-/* ---------- Base ---------- */
-* {
-    box-sizing: border-box
-}
-
-html, body {
-    height: 100%
-}
-
-body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: var(--font);
-    -webkit-font-smoothing: antialiased
-}
-
-img {
-    max-width: 100%;
-    display: block
-}
-
-a {
-    color: inherit
-}
-
-/* ---------- Layout ---------- */
 .wrap {
-    max-width: 980px;
     margin: 0 auto;
-    padding: var(--gap-5);
 }
 
 .panel {
@@ -445,3 +351,15 @@ input[type="color"]::-webkit-color-swatch {
         animation: none !important
     }
 }
+
+
+.ins-auth-required {
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+    padding:16px;
+}
+
+
+

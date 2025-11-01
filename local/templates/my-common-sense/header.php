@@ -16,5 +16,18 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 		<div id="panel">
 			<?$APPLICATION->ShowPanel();?>
 		</div>
-	
-						
+
+        <header>
+            <div class="wrapper-fluid">
+                <div class="wrapper">
+                    <div class="header-menu">
+                        <ul>
+                            <li><a href="/">Главная</a></li>
+                            <li><a href="/my-insights/">Инсайты</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+

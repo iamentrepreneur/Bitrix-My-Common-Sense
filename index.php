@@ -5,7 +5,6 @@ $APPLICATION->SetTitle("My Common Sense");
 
 
 
-
 <?php
 require($_SERVER['DOCUMENT_ROOT'] . '/bitrix/footer.php');
 ?>
