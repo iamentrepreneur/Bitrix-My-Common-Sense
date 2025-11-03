@@ -27,16 +27,20 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
             </div>
 
             <!-- Создание списка с цветом -->
-            <form method="post" class="row" style="margin-bottom:12px; grid-template-columns:1fr 140px auto; gap:8px">
+            <form method="post" class="form-row">
                 <?=bitrix_sessid_post()?>
                 <input type="hidden" name="INS_ACT" value="GROUP_CREATE"/>
-                <input class="input" type="text" name="name" placeholder="Название нового списка"/>
+                <input class="input" type="text" name="name" placeholder="Название нового списка" required/>
                 <input class="input" type="color" name="color" value="#cccccc" title="Цвет списка"/>
                 <button class="btn btn--p" type="submit">Создать</button>
             </form>
+        </div>
 
+        <div class="items-panel">
             <?php if (empty($arResult['GROUPS'])): ?>
+            <div class="list">
                 <div class="item">Пока нет ни одного списка.</div>
+            </div>
             <?php else: ?>
                 <div class="list">
                     <?php foreach ($arResult['GROUPS'] as $g): ?>
@@ -46,20 +50,21 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                         $cnt = (int)($g['CNT'] ?? 0);
                         ?>
                         <div class="item">
-                            <div>
+                            <div class="item-head-outer">
                                 <div class="color-head">
                                     <span class="group-dot" <?=$dotStyle?>></span>
                                     <strong><?=h($g['UF_NAME'] ?: 'Без названия')?></strong>
+<!--                                    <div class="count-badge" title="Количество инсайтов">-->
+<!--                                        <span>--><?php //=$cnt?><!--</span>-->
+<!--                                    </div>-->
                                 </div>
-                                <div class="muted">ID: <?= (int)$g['ID']?></div>
-                            </div>
-                            <div class="actions">
-                                <span class="count-badge" title="Количество инсайтов"><?=$cnt?></span>
-
+<!--                                <div class="muted">ID: --><?php //= (int)$g['ID']?><!--</div>-->
                                 <a class="btn" href="<?=h($makeUrl($tpls['group'] ?? 'group/#GROUP_ID#/', ['GROUP_ID'=>(int)$g['ID']]))?>">Открыть</a>
+                            </div>
+                            <div class="item-actions">
 
                                 <!-- Переименование -->
-                                <form method="post" style="display:inline">
+                                <form method="post">
                                     <?=bitrix_sessid_post()?>
                                     <input type="hidden" name="INS_ACT" value="GROUP_RENAME"/>
                                     <input type="hidden" name="id" value="<?= (int)$g['ID'] ?>"/>
@@ -76,13 +81,12 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                                 </form>
 
                                 <!-- 🎨 Смена цвета (автосабмит) -->
-                                <form method="post" style="display:inline-block; margin-left:6px;">
+                                <form method="post">
                                     <?=bitrix_sessid_post()?>
                                     <input type="hidden" name="INS_ACT" value="GROUP_SET_COLOR">
                                     <input type="hidden" name="id" value="<?= (int)$g['ID'] ?>">
                                     <input type="color" name="color" value="<?=h($color ?: '#cccccc')?>"
-                                           title="Выбрать цвет" onchange="this.form.submit()"
-                                           style="cursor:pointer;width:32px; height: 45px;border-radius: 5px;padding:0;background:none;">
+                                           title="Выбрать цвет" onchange="this.form.submit()">
                                 </form>
                             </div>
                         </div>
@@ -97,25 +101,31 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
         $color = trim((string)($g['UF_COLOR'] ?? ''));
         $dotStyle = $color ? 'style="background:'.h($color).'"' : '';
         ?>
+
+        <div class="under-panel">
+            <a class="btn" href="<?=h($folder)?>">← К спискам</a>
+        </div>
+
         <div class="panel">
             <div class="head">
-                <div>
+                <div class="list-head">
                     <h2 class="title">
                         <span class="group-dot" <?=$dotStyle?>></span>
                         <?= h($g['UF_NAME'] ?? 'Список') ?>
                     </h2>
-                    <div class="muted">
+                    <div class="muted" style="display: none">
                         ID: <?= (int)($arResult['GROUP_ID']) ?> · всего: <?= (int)$arResult['TOTAL'] ?>
                         <?php if ($color): ?>
                             · цвет: <span class="count-badge" style="background:<?=h($color)?>;border-color:rgba(0,0,0,.1);color:#000"> </span>
                         <?php endif; ?>
                     </div>
                 </div>
-                <div class="actions">
-                    <a class="btn" href="<?=h($folder)?>">← К спискам</a>
+
+                <div class="list-actions">
+
 
                     <!-- Переименовать -->
-                    <form method="post" style="display:inline">
+                    <form method="post">
                         <?=bitrix_sessid_post()?>
                         <input type="hidden" name="INS_ACT" value="GROUP_RENAME"/>
                         <input type="hidden" name="id" value="<?= (int)$arResult['GROUP_ID'] ?>"/>
@@ -124,7 +134,7 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                     </form>
 
                     <!-- Удалить -->
-                    <form method="post" style="display:inline" onsubmit="return confirm('Удалить список? Инсайты останутся без группы.')">
+                    <form method="post" onsubmit="return confirm('Удалить список? Инсайты останутся без группы.')">
                         <?=bitrix_sessid_post()?>
                         <input type="hidden" name="INS_ACT" value="GROUP_DELETE"/>
                         <input type="hidden" name="id" value="<?= (int)$arResult['GROUP_ID'] ?>"/>
@@ -132,31 +142,34 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                     </form>
 
                     <!-- 🎨 Смена цвета внутри группы (автосабмит) -->
-                    <form method="post" style="display:inline-block; margin-left:6px;">
+                    <form method="post">
                         <?=bitrix_sessid_post()?>
                         <input type="hidden" name="INS_ACT" value="GROUP_SET_COLOR">
                         <input type="hidden" name="id" value="<?= (int)$arResult['GROUP_ID'] ?>">
                         <input type="color" name="color" value="<?=h($color ?: '#cccccc')?>"
-                               title="Цвет списка" onchange="this.form.submit()"
-                               style="cursor:pointer;width:32px;height:32px;border:none;padding:0;background:none;">
+                               title="Цвет списка" onchange="this.form.submit()">
                     </form>
                 </div>
             </div>
+        </div>
 
-            <!-- Composer -->
-            <form method="post" class="row" style="grid-template-columns:1fr auto;gap:8px;margin-bottom:12px">
-                <?=bitrix_sessid_post()?>
-                <input type="hidden" name="INS_ACT" value="ITEM_CREATE"/>
-                <div style="display:grid;gap:8px">
+        <div class="panel">
+            <div class="list-items-action">
+                <form method="post" class="row">
+                    <?=bitrix_sessid_post()?>
+                    <input type="hidden" name="INS_ACT" value="ITEM_CREATE"/>
                     <input class="input" type="text" name="title" placeholder="Заголовок"/>
                     <textarea class="textarea" name="text" placeholder="Текст инсайта…" required></textarea>
                     <input class="input" type="text" name="tags" placeholder="Теги (через запятую)"/>
-                </div>
-                <button class="btn btn--p" type="submit">Добавить</button>
-            </form>
-
+                    <button class="btn btn--p" type="submit">Добавить</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel">
             <?php if (empty($arResult['ITEMS'])): ?>
+            <div class="list">
                 <div class="item">Пока пусто.</div>
+            </div>
             <?php else: ?>
                 <div class="list">
                     <?php foreach ($arResult['ITEMS'] as $it): ?>
