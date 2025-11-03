@@ -165,6 +165,7 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                 </form>
             </div>
         </div>
+
         <div class="panel">
             <?php if (empty($arResult['ITEMS'])): ?>
             <div class="list">
