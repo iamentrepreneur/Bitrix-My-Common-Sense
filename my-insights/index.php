@@ -1,6 +1,10 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("my-insights");
+global $USER;
+if(!$USER->isAuthorized()){
+    LocalRedirect(SITE_DIR.'auth/');
+}
 ?>
 
     <div class="wrapper-fluid">

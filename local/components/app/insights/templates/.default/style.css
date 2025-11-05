@@ -266,6 +266,89 @@ input[type="color"] {
 }
 
 
+.items-list {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+}
+
+.items-list > .item {
+    margin-bottom: var(--gap-4);
+}
+
+.card {
+    width: 100%;
+}
+
+.card-in {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-2);
+}
+
+.card-top {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.card-top-title {
+    display: flex;
+    width: calc(95% - 6px);
+}
+
+.card-top-title input {
+    width: 100%;
+}
+
+.card-top .badge {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-content: center;
+    width: calc(5% - 6px);
+}
+
+.card-top .badge span {
+    display: inline-block;
+    margin: auto;
+}
+
+.card-middle {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
+.card-middle textarea {
+    width: 100%;
+}
+
+
+
+.card-footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.card-footer > input {
+    width: calc(70% - 6px);
+}
+
+.card-footer-form-1 {
+    width: calc(15% - 6px);
+}
+
+.card-footer-form-2 {
+    width: calc(15% - 6px);
+}
+
+.card-footer-form-1 button, .card-footer-form-2 button {
+    width: 100%;
+}
+
 
 /*.btn--p {*/
 /*    background: var(--primary);*/

@@ -166,52 +166,59 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
             </div>
         </div>
 
-        <div class="panel">
+        <div class="items-panel">
             <?php if (empty($arResult['ITEMS'])): ?>
-            <div class="list">
+            <div class="items-list">
                 <div class="item">Пока пусто.</div>
             </div>
             <?php else: ?>
-                <div class="list">
+                <div class="items-list">
                     <?php foreach ($arResult['ITEMS'] as $it): ?>
-                        <div class="card">
-                            <div class="card__in">
-                                <div class="card__top">
-                                    <div style="flex:1">
-                                        <input type="text" form="form-<?= (int)$it['ID']?>" name="title" value="<?=h($it['UF_TITLE'] ?? '')?>" placeholder="Без названия"/>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-in">
+                                    <div class="card-top">
+                                        <div class="card-top-title">
+                                            <input class="input" type="text" form="form-<?= (int)$it['ID']?>" name="title" value="<?=h($it['UF_TITLE'] ?? '')?>" placeholder="Без названия"/>
+                                        </div>
+                                        <?php if ((int)$it['UF_IS_PINNED'] === 1): ?>
+                                            <div class="badge">
+                                                <span><i class="ri-flag-2-fill"></i></span>
+                                            </div>
+                                        <?else:?>
+                                            <div class="badge">
+                                                <span><i class="ri-flag-2-line"></i></span>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="badge">ID: <?= (int)$it['ID']?></div>
-                                    <?php if ((int)$it['UF_IS_PINNED'] === 1): ?>
-                                        <div class="badge">Закреплён</div>
-                                    <?php endif; ?>
-                                </div>
 
-                                <div>
-                                    <textarea form="form-<?= (int)$it['ID']?>" name="text" placeholder="Текст…"><?=h($it['UF_TEXT'] ?? '')?></textarea>
-                                </div>
+                                    <div class="card-middle">
+                                        <textarea class="textarea" form="form-<?= (int)$it['ID']?>" name="text" placeholder="Текст…"><?=h($it['UF_TEXT'] ?? '')?></textarea>
+                                    </div>
 
-                                <div class="row" style="grid-template-columns:1fr auto auto;gap:8px">
-                                    <input class="input" form="form-<?= (int)$it['ID']?>" type="text" name="tags" value="<?=h($it['UF_TAGS'] ?? '')?>" placeholder="теги…"/>
-                                    <form method="post" id="form-<?= (int)$it['ID']?>">
+                                    <div class="card-footer">
+                                        <input class="input" form="form-<?= (int)$it['ID']?>" type="text" name="tags" value="<?=h($it['UF_TAGS'][0] ?? '')?>" placeholder="теги…"/>
+                                        <form class="card-footer-form-1" method="post" id="form-<?= (int)$it['ID']?>">
+                                            <?=bitrix_sessid_post()?>
+                                            <input type="hidden" name="INS_ACT" value="ITEM_UPDATE"/>
+                                            <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>
+                                            <button class="btn" type="submit">Сохранить</button>
+                                        </form>
+                                        <form class="card-footer-form-2" method="post" onsubmit="return confirm('Удалить инсайт?')">
+                                            <?=bitrix_sessid_post()?>
+                                            <input type="hidden" name="INS_ACT" value="ITEM_DELETE"/>
+                                            <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>
+                                            <button class="btn" type="submit">Удалить</button>
+                                        </form>
+                                    </div>
+
+                                    <form method="post" style="display: none">
                                         <?=bitrix_sessid_post()?>
-                                        <input type="hidden" name="INS_ACT" value="ITEM_UPDATE"/>
+                                        <input type="hidden" name="INS_ACT" value="ITEM_TOGGLE_PIN"/>
                                         <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>
-                                        <button class="btn" type="submit">Сохранить</button>
-                                    </form>
-                                    <form method="post" onsubmit="return confirm('Удалить инсайт?')">
-                                        <?=bitrix_sessid_post()?>
-                                        <input type="hidden" name="INS_ACT" value="ITEM_DELETE"/>
-                                        <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>
-                                        <button class="btn" type="submit">Удалить</button>
+                                        <button class="btn" type="submit"><?= ((int)$it['UF_IS_PINNED'] === 1 ? 'Открепить' : 'Закрепить') ?></button>
                                     </form>
                                 </div>
-
-                                <form method="post" style="margin-top:6px">
-                                    <?=bitrix_sessid_post()?>
-                                    <input type="hidden" name="INS_ACT" value="ITEM_TOGGLE_PIN"/>
-                                    <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>
-                                    <button class="btn" type="submit"><?= ((int)$it['UF_IS_PINNED'] === 1 ? 'Открепить' : 'Закрепить') ?></button>
-                                </form>
                             </div>
                         </div>
                     <?php endforeach; ?>
