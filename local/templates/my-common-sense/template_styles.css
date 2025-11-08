@@ -31,18 +31,30 @@
     --font: 15px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
+.global-wrapper {
+    display: block;
+    min-height: 100svh;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
 .wrapper-fluid {
     padding: 0 15px;
 }
 
 .wrapper {
-    width: 1024px;
+    width: 100%;
+    max-width: 1024px;
     margin: 0 auto;
     display: block;
 }
 
+
 header {
     margin: 0 0 15px 0;
+    padding: 15px 0;
+    min-height: 70px;
 }
 
 .header-wrapper {
@@ -59,7 +71,6 @@ header {
 }
 
 .header-logo a {
-    font-size: 34px;
     font-weight: bold;
     color: var(--text);
     display: flex;
@@ -96,13 +107,14 @@ header {
     color: var(--text);
     display: inline-block;
     position: relative;
+    font-weight: 300;
 }
 
 .header-menu ul li a:after {
     content: '';
     display: block;
     width: 0;
-    height: 2px;
+    height: 1px;
     background-color: var(--text);
     transition: all .3s;
 }
@@ -115,6 +127,41 @@ header {
     width: 100%;
 }
 
+@media (min-width: 320px) {
+    .header-logo a {
+        font-size: 20px;
+    }
+    .header-menu {
+        display: none;
+    }
+}
+
+@media (min-width: 410px) {
+
+}
+
+@media (min-width: 640px) {
+    .header-logo a {
+        font-size: 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+
+}
+
+@media (min-width: 1280px) {
+    .header-logo a {
+        font-size: 34px;
+    }
+    .header-menu {
+        display: block;
+    }
+}
+
+@media (min-width: 1440px) {
+
+}
 
 
 
@@ -122,10 +169,15 @@ header {
 
 
 
-
-
-
-
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-4);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--gap-5);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
 
 .btn {
     display: inline-flex;
@@ -152,3 +204,156 @@ header {
     opacity: .6;
     cursor: not-allowed
 }
+
+.input, .textarea, select, .btn {
+    font: inherit;
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: #fff0;
+    border-radius: var(--radius-md);
+    height: var(--control-h);
+    padding: 0 var(--pad-x);
+    transition: border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.input, select {
+    background: var(--panel);
+}
+
+.input:focus, .textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.textarea {
+    min-height: 96px;
+    height: auto;
+    padding: var(--pad-y) var(--pad-x);
+    resize: vertical;
+    line-height: 1.55;
+    background: var(--panel);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.read-lists {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+}
+
+.read-list {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-5);
+}
+
+.read-list-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.read-list-ul {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-4);
+    padding-left: 20px;
+}
+
+.read-list-item {
+    list-style: circle;
+}
+
+.read-list-item-inner {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-1);
+
+}
+
+.read-list-item-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.read-list-item-text {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+
+
+
+
+
+
+
+
+
+
+#burger-menu {
+    display: block;
+    width: 100%;
+    height: calc(100svh - 70px);
+    position: absolute;
+    top: 70px;
+    padding: 15px;
+    right: -100svw;
+    transition: all .3s;
+}
+
+#burger-menu.active {
+    right: 0;
+}
+
+.burger-menu-ul {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-3);
+    align-items: flex-end;
+}
+
+.burger-menu-ul li {
+
+}
+
+.burger-menu-ul li a {
+    color: var(--text);
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

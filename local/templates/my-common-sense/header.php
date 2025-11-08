@@ -12,11 +12,15 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
         <?$APPLICATION->SetAdditionalCss("/local/templates/my-common-sense/fonts/roboto/stylesheet.css");?>
         <?$APPLICATION->SetAdditionalCss("/local/templates/my-common-sense/fonts/remix/remixicon.css");?>
         <?$APPLICATION->SetAdditionalCss("/local/templates/my-common-sense/css/reset.css");?>
+        <?$APPLICATION->SetAdditionalCss("/local/templates/my-common-sense/css/burger.css");?>
 	</head>
 	<body>
 		<div id="panel">
-			<?$APPLICATION->ShowPanel();?>
+			<?//$APPLICATION->ShowPanel();?>
 		</div>
+
+        <div class="global-wrapper">
+
 
         <header>
             <div class="wrapper-fluid">
@@ -53,9 +57,35 @@ if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
                                 array("HIDE_ICONS" => "Y")
                             );?>
                         </div>
+                        <button class="cmn-toggle-switch cmn-toggle-switch__htx">
+                            <span>toggle menu</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </header>
+
+        <div id="burger-menu">
+            <?$APPLICATION->IncludeComponent(
+                "bitrix:menu",
+                "burger-menu",
+                [
+                    "ALLOW_MULTI_SELECT" => "N",
+                    "CHILD_MENU_TYPE" => "left",
+                    "DELAY" => "N",
+                    "MAX_LEVEL" => "1",
+                    "MENU_CACHE_GET_VARS" => [
+                        0 => "",
+                    ],
+                    "MENU_CACHE_TIME" => "3600",
+                    "MENU_CACHE_TYPE" => "N",
+                    "MENU_CACHE_USE_GROUPS" => "Y",
+                    "ROOT_MENU_TYPE" => "top",
+                    "USE_EXT" => "N"
+                ],
+                false,
+                array("HIDE_ICONS" => "Y")
+            );?>
+        </div>
 
 

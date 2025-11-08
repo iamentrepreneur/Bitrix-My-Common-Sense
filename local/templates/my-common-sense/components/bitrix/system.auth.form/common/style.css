@@ -1,0 +1,10 @@
+.auth-form {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: var(--gap-4);
+}
+
+.auth-panel {
+    display: inline-block;
+}

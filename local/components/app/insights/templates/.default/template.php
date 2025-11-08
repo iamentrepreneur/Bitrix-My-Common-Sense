@@ -103,7 +103,7 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
         ?>
 
         <div class="under-panel">
-            <a class="btn" href="<?=h($folder)?>">← К спискам</a>
+            <a class="btn" href="<?=h($folder)?>"><i class="ri-arrow-left-long-line"></i> К спискам</a>
         </div>
 
         <div class="panel">
@@ -212,7 +212,7 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES|ENT_SUBSTITUTE, '
                                         </form>
                                     </div>
 
-                                    <form method="post" style="display: none">
+                                    <form method="post">
                                         <?=bitrix_sessid_post()?>
                                         <input type="hidden" name="INS_ACT" value="ITEM_TOGGLE_PIN"/>
                                         <input type="hidden" name="id" value="<?= (int)$it['ID']?>"/>

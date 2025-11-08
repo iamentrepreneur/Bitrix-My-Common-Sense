@@ -1,0 +1,62 @@
+/*<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"">*/
+
+/*First variant*/
+
+@media (min-width: 320px) {
+
+}
+
+@media (min-width: 410px) {
+
+}
+
+@media (min-width: 640px) {
+
+}
+
+@media (min-width: 1024px) {
+
+}
+
+@media (min-width: 1280px) {
+
+}
+
+@media (min-width: 1440px) {
+
+}
+
+/*Second variant*/
+
+@media screen and (max-width: 767px) {
+    
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    
+}
+
+@media screen and (min-width: 1200px) {
+    
+}
+
+
+@media (min-width: 320px) {
+
+}
+
+@media (min-width: 768px) {
+
+}
+
+@media (min-width: 1024px) {
+
+}
+
+@media (min-width: 1440px) {
+
+}

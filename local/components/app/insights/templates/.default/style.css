@@ -2,16 +2,6 @@
     width: 100%;
 }
 
-.panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--gap-4);
-    box-shadow: var(--shadow);
-    margin-bottom: var(--gap-5);
-    transition: box-shadow .2s ease, border-color .2s ease;
-}
-
 .under-panel {
     margin-bottom: var(--gap-3);
 }
@@ -56,35 +46,8 @@
     gap: var(--gap-4);
 }
 
-.input, .textarea, select, .btn {
-    font: inherit;
-    color: var(--text);
-    border: 1px solid var(--border);
-    background: #fff0;
-    border-radius: var(--radius-md);
-    height: var(--control-h);
-    padding: 0 var(--pad-x);
-    transition: border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
-}
 
-.input, select {
-    background: var(--panel);
-}
 
-.input:focus, .textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
-}
-
-.textarea {
-    min-height: 96px;
-    height: auto;
-    padding: var(--pad-y) var(--pad-x);
-    resize: vertical;
-    line-height: 1.55;
-    background: var(--panel);
-}
 
 input[type="color"] {
     overflow: hidden;

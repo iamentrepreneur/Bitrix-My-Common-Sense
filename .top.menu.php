@@ -8,7 +8,7 @@ $aMenuLinks = Array(
 		"" 
 	),
     Array(
-        "Инсайты",
+        "Инсайты (ред.)",
         "/my-insights/",
         Array(),
         Array(),

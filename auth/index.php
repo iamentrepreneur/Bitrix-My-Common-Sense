@@ -6,7 +6,7 @@ $APPLICATION->SetTitle("Авторизация");
         <div class="wrapper">
             <? $APPLICATION->IncludeComponent(
                 "bitrix:system.auth.form",
-                "",
+                "common",
                 array(
                     "FORGOT_PASSWORD_URL" => "/auth/forget.php",
                     "PROFILE_URL" => "/auth/personal.php",
